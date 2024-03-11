@@ -867,13 +867,14 @@ class KTOTrainer(Trainer):
             label_pad_token_id=self.label_pad_token_id,
         )
 
-        KL_logps = self.get_batch_logps(
-            KL_logits,
-            batch["KL_completion_labels"],
-            average_log_prob=False,
-            is_encoder_decoder=self.is_encoder_decoder,
-            label_pad_token_id=self.label_pad_token_id,
-        )
+        with torch.no_grad():
+            KL_logps = self.get_batch_logps(
+                KL_logits,
+                batch["KL_completion_labels"],
+                average_log_prob=False,
+                is_encoder_decoder=self.is_encoder_decoder,
+                label_pad_token_id=self.label_pad_token_id,
+            )
 
         if completion_logps.shape[0] != len(batch["label"]):
             raise ValueError(
